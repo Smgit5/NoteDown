@@ -36,9 +36,9 @@ public class SecurityConfig {
         return http.build();
     }
 
-    public UserDetailsService userDetailsService() {
-        return new CustomUserDetailsService();
-    }
+//    public UserDetailsService userDetailsService() {
+//        return new CustomUserDetailsService();
+//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

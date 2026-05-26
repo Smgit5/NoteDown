@@ -32,31 +32,26 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    private Claims extractAllClaims(String token) {
+    public Claims extractAllClaims(String token) {
         return Jwts.parser().verifyWith(getSigningKey()).build()
                 .parseSignedClaims(token)
                 .getPayload();
     }
 
-    private <T> T extractClaim(String token, Function<Claims, T> claimResolver) {
-        Claims allClaims = extractAllClaims(token);
-        return claimResolver.apply(allClaims);
+    public String extractSubject(Claims claims) {
+        return claims.getSubject();
     }
 
-    public String extractSubject(String token) {
-        return extractClaim(token, Claims::getSubject);
+    private Date extractExpiration(Claims claims) {
+        return claims.getExpiration();
     }
 
-    private Date extractExpiration(String token) {
-        return extractClaim(token, Claims::getExpiration);
+    private boolean isTokenExpired(Claims claims) {
+        return extractExpiration(claims).before(new Date());
     }
 
-    private boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
-    }
-
-    public boolean isTokenValid(String token) {
-        return !isTokenExpired(token);
+    public boolean isTokenValid(Claims claims) {
+        return !isTokenExpired(claims);
     }
 
 }

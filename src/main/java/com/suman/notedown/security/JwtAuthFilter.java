@@ -1,6 +1,7 @@
 package com.suman.notedown.security;
 
 import com.suman.notedown.service.JwtService;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -36,8 +37,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 if(authHeader != null && authHeader.startsWith("Bearer ")) {
                     String jwt = authHeader.substring(7);
                     if(!jwt.isBlank()) {
-                        if(jwtService.isTokenValid(jwt)) {
-                            String tokenUsername = jwtService.extractSubject(jwt);
+                        Claims claims = jwtService.extractAllClaims(jwt);
+                        if(jwtService.isTokenValid(claims)) {
+                            String tokenUsername = jwtService.extractSubject(claims);
                             UserDetails userDetails = userDetailsService.loadUserByUsername(tokenUsername);
                             UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
                                     userDetails,
