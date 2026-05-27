@@ -53,7 +53,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 }
 
             } catch(JwtException | UsernameNotFoundException e) {
-                System.out.println("Inside JwtAuthFilter :: doFilterInternal " + e.getMessage());
+                System.out.println("Inside JwtAuthFilter :: doFilterInternal, msg = " + e.getMessage());
             }
         }
 

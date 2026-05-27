@@ -1,6 +1,8 @@
 package com.suman.notedown.controller;
 
 import com.suman.notedown.dto.AuthRequestDTO;
+import com.suman.notedown.entity.User;
+import com.suman.notedown.repository.UserRepository;
 import com.suman.notedown.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,10 +19,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auth")
 public class AuthController {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
-    @Autowired
-    private JwtService jwtService;
+
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
+    private final UserRepository userRepository;
+
+    public AuthController(AuthenticationManager authenticationManager, JwtService jwtService, UserRepository userRepository) {
+        this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
+        this.userRepository = userRepository;
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<User> register(@RequestBody User user) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(userRepository.save(user));
+    }
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody AuthRequestDTO authRequestDTO) {
