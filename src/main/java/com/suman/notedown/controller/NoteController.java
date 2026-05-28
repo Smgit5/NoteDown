@@ -51,4 +51,9 @@ public class NoteController {
     public ResponseEntity<NoteResponseDTO> editNote(@PathVariable Integer noteId, @RequestBody NoteRequestDTO noteRequestDTO) {
         return ResponseEntity.status(HttpStatus.OK).body(noteService.editNote(noteId, noteRequestDTO));
     }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteNote(@RequestBody List<Integer> noteIds) {
+        return ResponseEntity.status(HttpStatus.OK).body(noteService.deleteNote(noteIds));
+    }
 }

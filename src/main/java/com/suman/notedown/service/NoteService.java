@@ -43,4 +43,13 @@ public class NoteService {
         noteMapper.updateNoteFromDto(noteRequestDTO, existingNote);
         return noteMapper.toDTO(noteRepository.save(existingNote));
     }
+
+    public String deleteNote(List<Integer> noteIds) {
+        List<Note> foundNotes = noteRepository.findAllById(noteIds);
+        if(foundNotes.size() != noteIds.size()) {
+            throw new RuntimeException("Some notes not found...");
+        }
+        noteRepository.deleteAll(foundNotes);
+        return "Selected notes were successfully deleted";
+    }
 }
