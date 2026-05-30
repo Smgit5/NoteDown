@@ -42,10 +42,6 @@ public class UserService {
         return currentUser;
     }
 
-    public Optional<User> findByUsername(String username) {
-        return userRepository.findByUsername(username);
-    }
-
     public UserResponseDTO viewProfile() {
         User currentUser = fetchCurrentUser();
         return userMapper.toDTO(currentUser);

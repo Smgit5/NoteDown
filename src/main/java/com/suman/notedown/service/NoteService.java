@@ -24,8 +24,8 @@ public class NoteService {
         this.userService = userService;
     }
 
-    private boolean isOwner(User user, Note note) {
-        return note.getOwner().getId().equals(user.getId());
+    private boolean isAdminOrOwner(User user, Note note) {
+        return user.getRole().equals("ROLE_ADMIN") || note.getOwner().getId().equals(user.getId());
     }
 
     public NoteResponseDTO createNote(NoteRequestDTO noteRequestDTO) {
@@ -44,7 +44,7 @@ public class NoteService {
     public NoteResponseDTO getNote(Integer noteId) {
         User currentUser = userService.fetchCurrentUser();
         Note note = noteRepository.findById(noteId).orElseThrow(() -> new RuntimeException("Note not found!"));
-        if(!isOwner(currentUser, note)) {
+        if(!isAdminOrOwner(currentUser, note)) {
             throw new RuntimeException("Invalid access blocked!");
         }
         return noteMapper.toDTO(note);
@@ -53,7 +53,7 @@ public class NoteService {
     public NoteResponseDTO editNote(Integer noteId, NoteRequestDTO noteRequestDTO) {
         User currentUser = userService.fetchCurrentUser();
         Note existingNote = noteRepository.findById(noteId).orElseThrow(() -> new RuntimeException("Note not found!"));
-        if(!isOwner(currentUser, existingNote)) {
+        if(!isAdminOrOwner(currentUser, existingNote)) {
             throw new RuntimeException("Invalid access blocked!");
         }
         noteMapper.updateNoteFromDto(noteRequestDTO, existingNote);
@@ -67,7 +67,7 @@ public class NoteService {
             throw new RuntimeException("Some notes not found...");
         }
         for(Note note: foundNotes) {
-            if(!isOwner(currentUser, note)) {
+            if(!isAdminOrOwner(currentUser, note)) {
                 throw new RuntimeException("Invalid access blocked!");
             }
         }
