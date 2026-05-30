@@ -1,4 +1,4 @@
-package com.suman.notedown.dto;
+package com.suman.notedown.dto.userDtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,5 +1,6 @@
-package com.suman.notedown.dto;
+package com.suman.notedown.dto.noteDtos;
 
+import com.suman.notedown.dto.userDtos.UserResponseDTO;
 import lombok.Getter;
 import lombok.Setter;
 

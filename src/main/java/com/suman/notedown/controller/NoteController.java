@@ -1,8 +1,7 @@
 package com.suman.notedown.controller;
 
-import com.suman.notedown.dto.NoteRequestDTO;
-import com.suman.notedown.dto.NoteResponseDTO;
-import com.suman.notedown.entity.Note;
+import com.suman.notedown.dto.noteDtos.NoteRequestDTO;
+import com.suman.notedown.dto.noteDtos.NoteResponseDTO;
 import com.suman.notedown.entity.User;
 import com.suman.notedown.service.NoteService;
 import com.suman.notedown.service.UserService;
@@ -36,15 +35,8 @@ public class NoteController {
     }
 
     @PostMapping("/new")
-        public ResponseEntity<NoteResponseDTO> createNote(@RequestBody NoteRequestDTO noteRequestDTO, Principal principal) {
-        if (principal == null) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-        String username = principal.getName();
-        User user = userService.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found: " + username));
-        NoteResponseDTO createdNote = noteService.createNote(noteRequestDTO, user);
-        return new ResponseEntity<>(createdNote, HttpStatus.CREATED);
+    public ResponseEntity<NoteResponseDTO> createNote(@RequestBody NoteRequestDTO noteRequestDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(noteService.createNote(noteRequestDTO));
     }
 
     @PutMapping("/edit/{noteId}")

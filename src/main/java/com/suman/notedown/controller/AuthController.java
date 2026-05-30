@@ -1,10 +1,10 @@
 package com.suman.notedown.controller;
 
-import com.suman.notedown.dto.AuthRequestDTO;
-import com.suman.notedown.entity.User;
-import com.suman.notedown.repository.UserRepository;
+import com.suman.notedown.dto.userDtos.AuthRequestDTO;
+import com.suman.notedown.dto.userDtos.UserRegisterRequestDTO;
+import com.suman.notedown.dto.userDtos.UserResponseDTO;
 import com.suman.notedown.service.JwtService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.suman.notedown.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,17 +22,17 @@ public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
-    public AuthController(AuthenticationManager authenticationManager, JwtService jwtService, UserRepository userRepository) {
+    public AuthController(AuthenticationManager authenticationManager, JwtService jwtService, UserService userService) {
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
-        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody User user) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(userRepository.save(user));
+    public ResponseEntity<UserResponseDTO> register(@RequestBody UserRegisterRequestDTO userRegReqDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.register(userRegReqDTO));
     }
 
     @PostMapping("/login")
@@ -41,7 +41,7 @@ public class AuthController {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequestDTO.getUsername(), authRequestDTO.getPassword()));
             return ResponseEntity.status(HttpStatus.OK).body(jwtService.generateToken(authRequestDTO.getUsername()));
         } catch (AuthenticationException e) {
-            System.out.println("!! AuthenticationException thrown !!");
+            System.out.println("Inside AuthController :: login, msg = " + e.getMessage());
             throw new RuntimeException(e);
         }
     }
