@@ -4,6 +4,7 @@ import com.suman.notedown.dto.noteDtos.NoteRequestDTO;
 import com.suman.notedown.dto.noteDtos.NoteResponseDTO;
 import com.suman.notedown.entity.Note;
 import com.suman.notedown.entity.User;
+import com.suman.notedown.enums.Role;
 import com.suman.notedown.repository.NoteRepository;
 import com.suman.notedown.util.NoteMapper;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class NoteService {
     }
 
     private boolean isAdminOrOwner(User user, Note note) {
-        return user.getRole().equals("ROLE_ADMIN") || note.getOwner().getId().equals(user.getId());
+        return user.getRole() == Role.ROLE_ADMIN || note.getOwner().getId().equals(user.getId());
     }
 
     public NoteResponseDTO createNote(NoteRequestDTO noteRequestDTO) {

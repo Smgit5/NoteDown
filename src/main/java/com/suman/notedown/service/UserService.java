@@ -4,6 +4,7 @@ import com.suman.notedown.dto.userDtos.UserRegisterRequestDTO;
 import com.suman.notedown.dto.userDtos.UserResponseDTO;
 import com.suman.notedown.dto.userDtos.UserUpdateRequestDTO;
 import com.suman.notedown.entity.User;
+import com.suman.notedown.enums.Role;
 import com.suman.notedown.repository.UserRepository;
 import com.suman.notedown.util.UserMapper;
 import org.springframework.security.core.Authentication;
@@ -57,7 +58,7 @@ public class UserService {
     public UserResponseDTO register(UserRegisterRequestDTO userRegReqDTO) {
         User user = userMapper.toEntity(userRegReqDTO);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRole("ROLE_USER"); // default role = ROLE_USER, admin can grant other roles later.
+        user.setRole(Role.ROLE_USER); // default role = ROLE_USER, admin can grant other roles later.
         User savedUser = userRepository.save(user);
         return userMapper.toDTO(savedUser);
     }
