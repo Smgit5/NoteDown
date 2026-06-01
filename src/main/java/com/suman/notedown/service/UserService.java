@@ -5,6 +5,7 @@ import com.suman.notedown.dto.userDtos.UserResponseDTO;
 import com.suman.notedown.dto.userDtos.UserUpdateRequestDTO;
 import com.suman.notedown.entity.User;
 import com.suman.notedown.enums.Role;
+import com.suman.notedown.exception.ResourceNotFoundException;
 import com.suman.notedown.repository.UserRepository;
 import com.suman.notedown.util.UserMapper;
 import org.springframework.security.core.Authentication;
@@ -34,12 +35,8 @@ public class UserService {
             System.out.println("Inside UserService :: currentUser - Authentication is null !");
             throw new RuntimeException("Authentication is null !");
         }
-        Object principal = authentication.getPrincipal();
-        if(!(principal instanceof UserDetails userDetails)) {
-            System.out.println("Inside UserService :: currentUser - Invalid Principal !");
-            throw new RuntimeException("Invalid Principal !");
-        }
-        User currentUser = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(() -> new UsernameNotFoundException("User Not found !"));
+        String username = (String) authentication.getPrincipal();
+        User currentUser = userRepository.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException("User Not found !"));
         return currentUser;
     }
 

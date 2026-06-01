@@ -4,6 +4,7 @@ import com.suman.notedown.dto.userDtos.UserResponseDTO;
 import com.suman.notedown.dto.userDtos.UserRoleUpdateDTO;
 import com.suman.notedown.dto.userDtos.UserStatusDTO;
 import com.suman.notedown.entity.User;
+import com.suman.notedown.exception.ResourceNotFoundException;
 import com.suman.notedown.repository.UserRepository;
 import com.suman.notedown.util.UserMapper;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,7 +23,7 @@ public class AdminService {
         this.userService = userService;
     }
     public UserResponseDTO updateRole(Integer userId, UserRoleUpdateDTO roleUpdateDTO) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("User not found!"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found!"));
         user.setRole(roleUpdateDTO.getRole());
         return userMapper.toDTO(userRepository.save(user));
     }
@@ -34,12 +35,12 @@ public class AdminService {
     }
 
     public UserResponseDTO viewUser(Integer id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User not found!"));
+        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found!"));
         return userMapper.toDTO(user);
     }
 
     public String modifyUserStatus(Integer id, UserStatusDTO userStatusDTO) {
-        User user = userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User not found!"));
+        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found!"));
         User currentUser = userService.fetchCurrentUser();
         if(currentUser.getId().equals(id)) {
             throw new RuntimeException("Self ban is not allowed.");

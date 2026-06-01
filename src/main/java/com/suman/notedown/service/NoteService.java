@@ -5,8 +5,10 @@ import com.suman.notedown.dto.noteDtos.NoteResponseDTO;
 import com.suman.notedown.entity.Note;
 import com.suman.notedown.entity.User;
 import com.suman.notedown.enums.Role;
+import com.suman.notedown.exception.ResourceNotFoundException;
 import com.suman.notedown.repository.NoteRepository;
 import com.suman.notedown.util.NoteMapper;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -44,18 +46,18 @@ public class NoteService {
 
     public NoteResponseDTO getNote(Integer noteId) {
         User currentUser = userService.fetchCurrentUser();
-        Note note = noteRepository.findById(noteId).orElseThrow(() -> new RuntimeException("Note not found!"));
+        Note note = noteRepository.findById(noteId).orElseThrow(() -> new ResourceNotFoundException("Note not found!"));
         if(!isAdminOrOwner(currentUser, note)) {
-            throw new RuntimeException("Invalid access blocked!");
+            throw new AccessDeniedException("Access Restricted");
         }
         return noteMapper.toDTO(note);
     }
 
     public NoteResponseDTO editNote(Integer noteId, NoteRequestDTO noteRequestDTO) {
         User currentUser = userService.fetchCurrentUser();
-        Note existingNote = noteRepository.findById(noteId).orElseThrow(() -> new RuntimeException("Note not found!"));
+        Note existingNote = noteRepository.findById(noteId).orElseThrow(() -> new ResourceNotFoundException("Note not found!"));
         if(!isAdminOrOwner(currentUser, existingNote)) {
-            throw new RuntimeException("Invalid access blocked!");
+            throw new AccessDeniedException("Access Restricted");
         }
         noteMapper.updateNoteFromDto(noteRequestDTO, existingNote);
         return noteMapper.toDTO(noteRepository.save(existingNote));
@@ -65,11 +67,11 @@ public class NoteService {
         User currentUser = userService.fetchCurrentUser();
         List<Note> foundNotes = noteRepository.findAllById(noteIds);
         if(foundNotes.size() != noteIds.size()) {
-            throw new RuntimeException("Some notes not found...");
+            throw new ResourceNotFoundException("Some notes not found...");
         }
         for(Note note: foundNotes) {
             if(!isAdminOrOwner(currentUser, note)) {
-                throw new RuntimeException("Invalid access blocked!");
+                throw new AccessDeniedException("Access Restricted");
             }
         }
         noteRepository.deleteAll(foundNotes);

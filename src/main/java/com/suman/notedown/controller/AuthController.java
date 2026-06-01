@@ -3,12 +3,15 @@ package com.suman.notedown.controller;
 import com.suman.notedown.dto.userDtos.AuthRequestDTO;
 import com.suman.notedown.dto.userDtos.UserRegisterRequestDTO;
 import com.suman.notedown.dto.userDtos.UserResponseDTO;
+import com.suman.notedown.entity.User;
+import com.suman.notedown.enums.Role;
 import com.suman.notedown.service.JwtService;
 import com.suman.notedown.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,12 +40,10 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody AuthRequestDTO authRequestDTO) {
-        try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequestDTO.getUsername(), authRequestDTO.getPassword()));
-            return ResponseEntity.status(HttpStatus.OK).body(jwtService.generateToken(authRequestDTO.getUsername()));
-        } catch (AuthenticationException e) {
-            System.out.println("Inside AuthController :: login, msg = " + e.getMessage());
-            throw new RuntimeException(e);
-        }
+        Authentication authResponse = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequestDTO.getUsername(), authRequestDTO.getPassword()));
+        User user = (User) authResponse.getPrincipal();
+        String username = user.getUsername();
+        String role = user.getRole().name();
+        return ResponseEntity.status(HttpStatus.OK).body(jwtService.generateToken(username, role));
     }
 }

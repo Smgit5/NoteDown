@@ -18,9 +18,10 @@ public class JwtService {
     @Value("${jwt.secret}")
     private String secret;
 
-    public String generateToken(String username) {
+    public String generateToken(String username, String role) {
         return Jwts.builder()
                 .subject(username)
+                .claim("role", role)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + 15*60*1000)) // 15 minutes
                 .signWith(getSigningKey())
@@ -40,6 +41,10 @@ public class JwtService {
 
     public String extractSubject(Claims claims) {
         return claims.getSubject();
+    }
+
+    public String extractRole(Claims claims) {
+        return claims.get("role", String.class);
     }
 
     private Date extractExpiration(Claims claims) {
