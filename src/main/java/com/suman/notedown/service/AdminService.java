@@ -4,10 +4,10 @@ import com.suman.notedown.dto.userDtos.UserResponseDTO;
 import com.suman.notedown.dto.userDtos.UserRoleUpdateDTO;
 import com.suman.notedown.dto.userDtos.UserStatusDTO;
 import com.suman.notedown.entity.User;
+import com.suman.notedown.exception.InvalidOperationException;
 import com.suman.notedown.exception.ResourceNotFoundException;
 import com.suman.notedown.repository.UserRepository;
 import com.suman.notedown.util.UserMapper;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -43,7 +43,7 @@ public class AdminService {
         User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found!"));
         User currentUser = userService.fetchCurrentUser();
         if(currentUser.getId().equals(id)) {
-            throw new RuntimeException("Self ban is not allowed.");
+            throw new InvalidOperationException("Self ban is not allowed.");
         }
         user.setEnabled(userStatusDTO.isEnabled());
         userRepository.save(user);

@@ -10,12 +10,8 @@ import com.suman.notedown.repository.UserRepository;
 import com.suman.notedown.util.UserMapper;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -31,10 +27,6 @@ public class UserService {
     //fetch current logged-in user
     public User fetchCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication == null) {
-            System.out.println("Inside UserService :: currentUser - Authentication is null !");
-            throw new RuntimeException("Authentication is null !");
-        }
         String username = (String) authentication.getPrincipal();
         User currentUser = userRepository.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException("User Not found !"));
         return currentUser;
