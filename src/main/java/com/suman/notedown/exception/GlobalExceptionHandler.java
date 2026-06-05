@@ -33,4 +33,10 @@ public class GlobalExceptionHandler {
         ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(HttpStatus.BAD_REQUEST.value(), ex.getMessage());
         return ResponseEntity.status(errorResponseDTO.getStatus()).body(errorResponseDTO);
     }
+
+    @ExceptionHandler(UsernameAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponseDTO> handleUsernameAlreadyExistsException(UsernameAlreadyExistsException ex) {
+        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(HttpStatus.CONFLICT.value(), ex.getMessage());
+        return ResponseEntity.status(errorResponseDTO.getStatus()).body(errorResponseDTO);
+    }
 }

@@ -7,6 +7,7 @@ import com.suman.notedown.entity.User;
 import com.suman.notedown.enums.Role;
 import com.suman.notedown.service.JwtService;
 import com.suman.notedown.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,7 +35,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponseDTO> register(@RequestBody UserRegisterRequestDTO userRegReqDTO) {
+    public ResponseEntity<UserResponseDTO> register(@Valid @RequestBody UserRegisterRequestDTO userRegReqDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.register(userRegReqDTO));
     }
 
