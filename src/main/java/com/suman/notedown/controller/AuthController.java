@@ -4,7 +4,6 @@ import com.suman.notedown.dto.userDtos.AuthRequestDTO;
 import com.suman.notedown.dto.userDtos.UserRegisterRequestDTO;
 import com.suman.notedown.dto.userDtos.UserResponseDTO;
 import com.suman.notedown.entity.User;
-import com.suman.notedown.enums.Role;
 import com.suman.notedown.service.JwtService;
 import com.suman.notedown.service.UserService;
 import jakarta.validation.Valid;
@@ -13,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +34,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<UserResponseDTO> register(@Valid @RequestBody UserRegisterRequestDTO userRegReqDTO) {
+        System.out.println("Inside register controller...");
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.register(userRegReqDTO));
     }
 

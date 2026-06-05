@@ -5,6 +5,7 @@ import com.suman.notedown.dto.noteDtos.NoteResponseDTO;
 import com.suman.notedown.entity.User;
 import com.suman.notedown.service.NoteService;
 import com.suman.notedown.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,12 +36,12 @@ public class NoteController {
     }
 
     @PostMapping("/new")
-    public ResponseEntity<NoteResponseDTO> createNote(@RequestBody NoteRequestDTO noteRequestDTO) {
+    public ResponseEntity<NoteResponseDTO> createNote(@Valid @RequestBody NoteRequestDTO noteRequestDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(noteService.createNote(noteRequestDTO));
     }
 
     @PutMapping("/edit/{noteId}")
-    public ResponseEntity<NoteResponseDTO> editNote(@PathVariable Integer noteId, @RequestBody NoteRequestDTO noteRequestDTO) {
+    public ResponseEntity<NoteResponseDTO> editNote(@PathVariable Integer noteId, @Valid @RequestBody NoteRequestDTO noteRequestDTO) {
         return ResponseEntity.status(HttpStatus.OK).body(noteService.editNote(noteId, noteRequestDTO));
     }
 

@@ -32,6 +32,8 @@ public class NoteService {
     }
 
     public NoteResponseDTO createNote(NoteRequestDTO noteRequestDTO) {
+        noteRequestDTO.setTitle(noteRequestDTO.getTitle().trim());
+        noteRequestDTO.setContent(noteRequestDTO.getContent().trim());
         Note note = noteMapper.toEntity(noteRequestDTO);
         note.setOwner(userService.fetchCurrentUser());
         Note savedNote = noteRepository.save(note);

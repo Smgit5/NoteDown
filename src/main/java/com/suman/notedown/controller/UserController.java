@@ -3,6 +3,7 @@ package com.suman.notedown.controller;
 import com.suman.notedown.dto.userDtos.UserResponseDTO;
 import com.suman.notedown.dto.userDtos.UserUpdateRequestDTO;
 import com.suman.notedown.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -32,7 +33,7 @@ public class UserController {
 
     // Update profile
     @PatchMapping
-    public ResponseEntity<UserResponseDTO> updateProfile(@RequestBody UserUpdateRequestDTO userUpdateRequestDTO) {
+    public ResponseEntity<UserResponseDTO> updateProfile(@Valid @RequestBody UserUpdateRequestDTO userUpdateRequestDTO) {
         return ResponseEntity.status(HttpStatus.OK).body(userService.updateProfile(userUpdateRequestDTO));
     }
 

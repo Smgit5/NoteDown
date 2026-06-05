@@ -1,5 +1,6 @@
 package com.suman.notedown.entity;
 
+import com.suman.notedown.enums.Gender;
 import com.suman.notedown.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
@@ -28,7 +29,9 @@ public class User implements UserDetails {
     private String password;
     @Enumerated(EnumType.STRING)
     private Role role;
-    private String gender;
+
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
     private LocalDate dob;
     private boolean enabled = true;
 
