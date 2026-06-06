@@ -8,6 +8,8 @@ import com.suman.notedown.exception.InvalidOperationException;
 import com.suman.notedown.exception.ResourceNotFoundException;
 import com.suman.notedown.repository.UserRepository;
 import com.suman.notedown.util.UserMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,9 +31,9 @@ public class AdminService {
     }
 
 
-    public List<UserResponseDTO> viewAllUsers() {
-        List<User> users = userRepository.findAll();
-        return users.stream().map(userMapper::toDTO).toList();
+    public Page<UserResponseDTO> viewAllUsers(Pageable pageable) {
+        Page<User> users = userRepository.findAll(pageable);
+        return users.map(userMapper::toDTO);
     }
 
     public UserResponseDTO viewUser(Integer id) {
