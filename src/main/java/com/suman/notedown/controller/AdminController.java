@@ -22,8 +22,7 @@ import java.util.List;
         {
                 @ApiResponse(responseCode = "403", description = "Access Denied. Only Admins can access", content = @Content(
                         schema = @Schema(implementation = ErrorResponseDTO.class)
-                )),
-                @ApiResponse(responseCode = "200", description = "Successful")
+                ))
         }
 )
 public class AdminController {
