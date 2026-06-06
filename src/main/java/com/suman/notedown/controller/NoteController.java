@@ -5,6 +5,9 @@ import com.suman.notedown.dto.noteDtos.NoteResponseDTO;
 import com.suman.notedown.entity.User;
 import com.suman.notedown.service.NoteService;
 import com.suman.notedown.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +38,12 @@ public class NoteController {
         return ResponseEntity.status(HttpStatus.OK).body(noteService.getNote(noteId));
     }
 
+    @ApiResponses(
+            {
+                    @ApiResponse(responseCode = "201", description = "Note created successfully"),
+                    @ApiResponse(responseCode = "400", description = "Invalid request")
+            }
+    )
     @PostMapping("/new")
     public ResponseEntity<NoteResponseDTO> createNote(@Valid @RequestBody NoteRequestDTO noteRequestDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(noteService.createNote(noteRequestDTO));

@@ -1,11 +1,17 @@
 package com.suman.notedown.controller;
 
+import com.suman.notedown.dto.errorDtos.ErrorResponseDTO;
 import com.suman.notedown.dto.userDtos.AuthRequestDTO;
 import com.suman.notedown.dto.userDtos.UserRegisterRequestDTO;
 import com.suman.notedown.dto.userDtos.UserResponseDTO;
 import com.suman.notedown.entity.User;
 import com.suman.notedown.service.JwtService;
 import com.suman.notedown.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,12 +38,24 @@ public class AuthController {
         this.userService = userService;
     }
 
+    @Operation(summary = "Register a new user")
+    @ApiResponses(
+            {
+                    @ApiResponse(responseCode = "201", description = "User registered successfully"),
+                    @ApiResponse(responseCode = "400", description = "Invalid request"),
+                    @ApiResponse(responseCode = "409", description = "Username already exists", content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponseDTO.class)
+                    ))
+            }
+    )
     @PostMapping("/register")
     public ResponseEntity<UserResponseDTO> register(@Valid @RequestBody UserRegisterRequestDTO userRegReqDTO) {
         System.out.println("Inside register controller...");
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.register(userRegReqDTO));
     }
 
+    @Operation(summary = "Login user")
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody AuthRequestDTO authRequestDTO) {
         Authentication authResponse = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequestDTO.getUsername(), authRequestDTO.getPassword()));
