@@ -1,10 +1,15 @@
 package com.suman.notedown.controller;
 
+import com.suman.notedown.dto.errorDtos.ErrorResponseDTO;
 import com.suman.notedown.dto.userDtos.UserResponseDTO;
 import com.suman.notedown.dto.userDtos.UserRoleUpdateDTO;
 import com.suman.notedown.dto.userDtos.UserStatusDTO;
 import com.suman.notedown.service.AdminService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +18,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/admin")
+@ApiResponses(
+        {
+                @ApiResponse(responseCode = "403", description = "Access Denied. Only Admins can access", content = @Content(
+                        schema = @Schema(implementation = ErrorResponseDTO.class)
+                )),
+                @ApiResponse(responseCode = "200", description = "Successful")
+        }
+)
 public class AdminController {
     private final AdminService adminService;
 
