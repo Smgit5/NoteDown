@@ -1,5 +1,6 @@
 package com.suman.notedown.service;
 
+import com.suman.notedown.dto.pageDtos.PageResponseDTO;
 import com.suman.notedown.dto.userDtos.UserResponseDTO;
 import com.suman.notedown.dto.userDtos.UserRoleUpdateDTO;
 import com.suman.notedown.dto.userDtos.UserStatusDTO;
@@ -7,12 +8,11 @@ import com.suman.notedown.entity.User;
 import com.suman.notedown.exception.InvalidOperationException;
 import com.suman.notedown.exception.ResourceNotFoundException;
 import com.suman.notedown.repository.UserRepository;
+import com.suman.notedown.util.PaginationUtility;
 import com.suman.notedown.util.UserMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class AdminService {
@@ -31,9 +31,10 @@ public class AdminService {
     }
 
 
-    public Page<UserResponseDTO> viewAllUsers(Pageable pageable) {
-        Page<User> users = userRepository.findAll(pageable);
-        return users.map(userMapper::toDTO);
+    public PageResponseDTO<UserResponseDTO> viewAllUsers(Pageable pageable) {
+        Page<User> pageOfUsers = userRepository.findAll(pageable);
+        Page<UserResponseDTO> pageOfUserResponseDtos = pageOfUsers.map(userMapper::toDTO);
+        return PaginationUtility.toPageResponseDTO(pageOfUserResponseDtos);
     }
 
     public UserResponseDTO viewUser(Integer id) {
