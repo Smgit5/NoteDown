@@ -2,6 +2,7 @@ package com.suman.notedown.controller;
 
 import com.suman.notedown.dto.noteDtos.NoteRequestDTO;
 import com.suman.notedown.dto.noteDtos.NoteResponseDTO;
+import com.suman.notedown.dto.pageDtos.PageResponseDTO;
 import com.suman.notedown.entity.User;
 import com.suman.notedown.service.NoteService;
 import com.suman.notedown.service.UserService;
@@ -9,6 +10,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,16 +26,18 @@ import java.util.List;
 public class NoteController {
 
     private final NoteService noteService;
-    private final UserService userService;
 
-    public NoteController(NoteService noteService, UserService userService) {
+    public NoteController(NoteService noteService) {
         this.noteService = noteService;
-        this.userService = userService;
     }
 
     @GetMapping("/all-notes")
-    public ResponseEntity<List<NoteResponseDTO>> getAllNotes() {
-        return ResponseEntity.status(HttpStatus.OK).body(noteService.getAllNotes());
+    public ResponseEntity<PageResponseDTO<NoteResponseDTO>> getAllNotes(
+            @ParameterObject
+            @PageableDefault(sort = "id", direction = Sort.Direction.ASC)
+            Pageable pageable
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(noteService.getAllNotes(pageable));
     }
 
     @GetMapping("/{noteId}")
@@ -58,4 +65,7 @@ public class NoteController {
     public ResponseEntity<String> deleteNote(@RequestBody List<Integer> noteIds) {
         return ResponseEntity.status(HttpStatus.OK).body(noteService.deleteNote(noteIds));
     }
+
+//    @GetMapping("/search")
+//    public ResponseEntity<PageResponseDTO<NoteResponseDTO>> searchNoteByKeyword()
 }

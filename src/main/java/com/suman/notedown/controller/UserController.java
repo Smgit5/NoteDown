@@ -20,11 +20,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/health")
-    public String healthCheck() {
-        return "Hey, your app is healthy !";
-    }
-
     // View profile
     @GetMapping
     public ResponseEntity<UserResponseDTO> viewProfile() {

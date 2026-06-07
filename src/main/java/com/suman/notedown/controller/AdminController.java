@@ -58,7 +58,7 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body(adminService.viewUser(id));
     }
 
-    @Operation(summary = "Enable/Disable user accound by admin")
+    @Operation(summary = "Enable/Disable user account by admin")
     @PatchMapping("/users/{id}/status")
     public ResponseEntity<String> modifyUserStatus(@PathVariable Integer id, @RequestBody UserStatusDTO userStatusDTO) {
         return ResponseEntity.status(HttpStatus.OK).body(adminService.modifyUserStatus(id, userStatusDTO));

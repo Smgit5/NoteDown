@@ -10,8 +10,4 @@ import org.mapstruct.MappingTarget;
 public interface NoteMapper {
 
     NoteResponseDTO toDTO(Note note);
-
-    Note toEntity(NoteRequestDTO dto);
-
-    void updateNoteFromDto(NoteRequestDTO dto, @MappingTarget Note note);
 }

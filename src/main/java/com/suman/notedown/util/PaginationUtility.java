@@ -9,6 +9,7 @@ public class PaginationUtility {
                 page.getContent(),
                 page.getNumber(),
                 page.getSize(),
+                page.getNumberOfElements(),
                 page.getTotalElements(),
                 page.getTotalPages(),
                 page.isLast()
